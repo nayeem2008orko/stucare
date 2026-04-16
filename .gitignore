@@ -1,0 +1,19 @@
+# Node
+backend/node_modules/
+backend/.env
+backend/log/
+# Python
+algorithm/venv/
+algorithm/.env
+algorithm/__pycache__/
+algorithm/**/__pycache__/
+
+# Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# General
+.DS_Store
+*.log
+.vscode
