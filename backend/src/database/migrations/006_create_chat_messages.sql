@@ -1,5 +1,4 @@
--- 006_create_chat_messages.sql
--- Stores all chatbot conversation history per user
+
 
 CREATE TYPE chat_mode AS ENUM ('study', 'motivation');
 CREATE TYPE message_role AS ENUM ('user', 'assistant');

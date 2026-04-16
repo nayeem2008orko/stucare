@@ -1,12 +1,6 @@
-// analytics.service.js
-// Computes progress and streak analytics for the dashboard
+const pool = require("../config/db");
+const TaskModel = require("../models/task.model");
 
-const pool     = require('../config/db');
-const TaskModel = require('../models/task.model');
-
-/**
- * Get overall task completion stats for a user
- */
 async function getProgress(userId) {
   const result = await pool.query(
     `SELECT
@@ -18,50 +12,49 @@ async function getProgress(userId) {
        COALESCE(SUM(estimated_hours), 0)                  AS total_hours_planned
      FROM tasks
      WHERE user_id = $1`,
-    [userId]
+    [userId],
   );
 
   const row = result.rows[0];
 
-  const completionRate = row.total_tasks > 0
-    ? Math.round((row.completed_tasks / row.total_tasks) * 100)
-    : 0;
+  const completionRate =
+    row.total_tasks > 0
+      ? Math.round((row.completed_tasks / row.total_tasks) * 100)
+      : 0;
 
   return {
-    totalTasks:       parseInt(row.total_tasks),
-    completedTasks:   parseInt(row.completed_tasks),
-    missedTasks:      parseInt(row.missed_tasks),
-    inProgressTasks:  parseInt(row.in_progress_tasks),
+    totalTasks: parseInt(row.total_tasks),
+    completedTasks: parseInt(row.completed_tasks),
+    missedTasks: parseInt(row.missed_tasks),
+    inProgressTasks: parseInt(row.in_progress_tasks),
     completionRate,
     totalHoursStudied: parseFloat(row.total_hours_studied),
-    totalHoursPlanned: parseFloat(row.total_hours_planned)
+    totalHoursPlanned: parseFloat(row.total_hours_planned),
   };
 }
 
-/**
- * Get the student's current study streak (consecutive days with completed sessions)
- */
 async function getStreak(userId) {
   const result = await pool.query(
     `SELECT DISTINCT DATE(started_at) AS study_date
      FROM task_sessions
      WHERE user_id = $1 AND ended_at IS NOT NULL
      ORDER BY study_date DESC`,
-    [userId]
+    [userId],
   );
 
-  const dates = result.rows.map(r => r.study_date.toISOString().split('T')[0]);
+  const dates = result.rows.map(
+    (r) => r.study_date.toISOString().split("T")[0],
+  );
 
   if (dates.length === 0) return { currentStreak: 0, longestStreak: 0 };
 
-  // Calculate current streak
   let currentStreak = 0;
-  const today     = new Date();
+  const today = new Date();
 
   for (let i = 0; i < dates.length; i++) {
     const expected = new Date(today);
     expected.setDate(today.getDate() - i);
-    const expectedStr = expected.toISOString().split('T')[0];
+    const expectedStr = expected.toISOString().split("T")[0];
 
     if (dates[i] === expectedStr) {
       currentStreak++;
@@ -70,7 +63,6 @@ async function getStreak(userId) {
     }
   }
 
-  // Calculate longest streak
   let longestStreak = 1;
   let runningStreak = 1;
 

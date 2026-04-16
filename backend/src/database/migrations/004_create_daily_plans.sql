@@ -1,5 +1,4 @@
--- 004_create_daily_plans.sql
--- One row per day per user — the AI-generated study plan for that day
+
 
 CREATE TABLE IF NOT EXISTS daily_plans (
   id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),

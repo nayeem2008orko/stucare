@@ -12,37 +12,28 @@ const PROMPT_INJECTION_PATTERNS = [
   /act as (a |an )?/i,
   /jailbreak/i,
   /\[INST\]/i,
-  /<\|system\|>/i
+  /<\|system\|>/i,
 ];
 
-/**
- * Sanitize a plain text string — strips HTML tags and trims whitespace
- */
 function sanitizeText(str) {
-  if (typeof str !== 'string') return '';
+  if (typeof str !== "string") return "";
   return str
-    .replace(/<[^>]*>/g, '')   // strip HTML tags
-    .replace(/[<>]/g, '')      // remove remaining angle brackets
+    .replace(/<[^>]*>/g, "") // strip HTML tags
+    .replace(/[<>]/g, "") // remove remaining angle brackets
     .trim();
 }
 
-/**
- * Sanitize a chatbot message — also checks for prompt injection attempts
- * Returns { safe: bool, cleaned: string }
- */
 function sanitizeChatMessage(message) {
   const cleaned = sanitizeText(message);
 
-  // Check for prompt injection patterns
-  const isInjection = PROMPT_INJECTION_PATTERNS.some(pattern =>
-    pattern.test(cleaned)
+  const isInjection = PROMPT_INJECTION_PATTERNS.some((pattern) =>
+    pattern.test(cleaned),
   );
 
   if (isInjection) {
     return { safe: false, cleaned };
   }
 
-  // Enforce message length limit
   if (cleaned.length > 2000) {
     return { safe: false, cleaned };
   }
@@ -50,14 +41,10 @@ function sanitizeChatMessage(message) {
   return { safe: true, cleaned };
 }
 
-/**
- * Sanitize an object's string fields recursively
- * Used before saving user input to the database
- */
 function sanitizeObject(obj) {
   const result = {};
   for (const [key, value] of Object.entries(obj)) {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       result[key] = sanitizeText(value);
     } else {
       result[key] = value;

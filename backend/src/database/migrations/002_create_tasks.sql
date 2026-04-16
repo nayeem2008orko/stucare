@@ -1,5 +1,4 @@
--- 002_create_tasks.sql
--- Each row is one study topic/subject the student wants to study
+
 
 CREATE TYPE task_status AS ENUM ('pending', 'in_progress', 'completed', 'missed');
 CREATE TYPE difficulty_level AS ENUM ('easy', 'medium', 'hard');
@@ -20,7 +19,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Indexes for common query patterns
+
 CREATE INDEX IF NOT EXISTS idx_tasks_user_id  ON tasks(user_id);
 CREATE INDEX IF NOT EXISTS idx_tasks_deadline ON tasks(deadline);
 CREATE INDEX IF NOT EXISTS idx_tasks_status   ON tasks(status);

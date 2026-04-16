@@ -1,7 +1,4 @@
-// validate.middleware.js
-// Runs express-validator checks and returns errors before hitting controller
-
-const { validationResult } = require('express-validator');
+const { validationResult } = require("express-validator");
 
 function validate(req, res, next) {
   const errors = validationResult(req);
@@ -9,11 +6,11 @@ function validate(req, res, next) {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
-      error:   'Validation failed',
-      details: errors.array().map(e => ({
-        field:   e.path,
-        message: e.msg
-      }))
+      error: "Validation failed",
+      details: errors.array().map((e) => ({
+        field: e.path,
+        message: e.msg,
+      })),
     });
   }
 

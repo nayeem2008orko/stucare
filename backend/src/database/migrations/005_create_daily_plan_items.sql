@@ -1,5 +1,4 @@
--- 005_create_daily_plan_items.sql
--- Each time slot inside a daily plan
+
 
 CREATE TYPE plan_item_status AS ENUM ('scheduled', 'completed', 'skipped', 'rescheduled');
 

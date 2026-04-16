@@ -1,5 +1,4 @@
--- 003_create_task_sessions.sql
--- Records each actual study session for a task
+
 
 CREATE TABLE IF NOT EXISTS task_sessions (
   id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
