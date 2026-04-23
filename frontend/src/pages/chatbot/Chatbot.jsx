@@ -1,29 +1,35 @@
 import { useState, useRef, useEffect } from 'react';
 import { chatbotApi } from '../../api/chatbot';
 
-// Strip LaTeX delimiters and convert to plain readable math
+// Strip LaTeX and convert plain-text math to readable Unicode
 function stripLatex(text) {
   return text
     .replace(/\\\[\s*/g, '').replace(/\s*\\\]/g, '')
     .replace(/\$\$\s*/g, '').replace(/\s*\$\$/g, '')
     .replace(/\\\(\s*/g, '').replace(/\s*\\\)/g, '')
-    .replace(/\\sqrt\{([^}]+)\}/g, 'sqrt($1)')
-    .replace(/\\sqrt\s+(\S+)/g, 'sqrt($1)')
+    .replace(/\\sqrt\{([^}]+)\}/g, '\u221a($1)')
+    .replace(/\\sqrt\s+(\S+)/g, '\u221a$1')
     .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '($1)/($2)')
-    .replace(/\\approx/g, '≈')
-    .replace(/\\times/g, '×')
-    .replace(/\\div/g, '÷')
-    .replace(/\\pm/g, '±')
-    .replace(/\\infty/g, '∞')
-    .replace(/\\pi/g, 'π')
-    .replace(/\\alpha/g, 'α').replace(/\\beta/g, 'β').replace(/\\gamma/g, 'γ')
-    .replace(/\\theta/g, 'θ').replace(/\\lambda/g, 'λ').replace(/\\mu/g, 'μ')
-    .replace(/\\sigma/g, 'σ').replace(/\\Delta/g, 'Δ').replace(/\\sum/g, 'Σ')
-    .replace(/\^2/g, '²').replace(/\^3/g, '³')
+    .replace(/\\approx/g, '\u2248')
+    .replace(/\\times/g, '\u00d7')
+    .replace(/\\div/g, '\u00f7')
+    .replace(/\\pm/g, '\u00b1')
+    .replace(/\\infty/g, '\u221e')
+    .replace(/\\pi/g, '\u03c0')
+    .replace(/\\alpha/g, '\u03b1').replace(/\\beta/g, '\u03b2').replace(/\\gamma/g, '\u03b3')
+    .replace(/\\theta/g, '\u03b8').replace(/\\lambda/g, '\u03bb').replace(/\\mu/g, '\u03bc')
+    .replace(/\\sigma/g, '\u03c3').replace(/\\Delta/g, '\u0394').replace(/\\sum/g, '\u03a3')
+    .replace(/\^2/g, '\u00b2').replace(/\^3/g, '\u00b3')
     .replace(/\^{([^}]+)}/g, '^($1)')
     .replace(/\\[a-zA-Z]+\{([^}]*)\}/g, '$1')
     .replace(/\\[a-zA-Z]+/g, '')
-    .replace(/[{}]/g, '');
+    .replace(/[{}]/g, '')
+    .replace(/\bsqrt\(([^)]+)\)/g, '\u221a($1)')
+    .replace(/\bsqrt\s+(\S+)/g, '\u221a$1')
+    .replace(/\bpi\b/g, '\u03c0')
+    .replace(/\binfinity\b/g, '\u221e')
+    .replace(/\b(\w+)\^2\b/g, '$1\u00b2')
+    .replace(/\b(\w+)\^3\b/g, '$1\u00b3');
 }
 
 function inlineFormat(text) {
