@@ -18,7 +18,7 @@ const app = express();
 // ── Security middleware ───────────────────────────────────────────────────────
 app.use(helmet());   // sets secure HTTP headers
 app.use(cors({
-  origin:      process.env.FRONTEND_URL || 'http://localhost:4200',
+  origin:      process.env.FRONTEND_URL,
   credentials: true
 }));
 
@@ -29,11 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 // ── Rate limiting ─────────────────────────────────────────────────────────────
 app.use('/api', generalLimiter);
 
-// ── Request logging ───────────────────────────────────────────────────────────
-app.use((req, res, next) => {
-  logger.debug(`${req.method} ${req.path}`);
-  next();
-});
+
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 app.use('/api/auth',      require('./src/routes/auth.routes'));
