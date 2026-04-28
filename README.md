@@ -31,7 +31,7 @@ StuCare is a full-stack study planning application that combines adaptive schedu
 | Backend | Node.js + Express |
 | Database | PostgreSQL |
 | Algorithm Service | Python 3 + Flask |
-| AI | OpenRouter API (NVIDIA Nemotron) |
+| AI | OpenRouter API  |
 | Auth | JWT (access + refresh tokens) + bcrypt |
 
 ---
