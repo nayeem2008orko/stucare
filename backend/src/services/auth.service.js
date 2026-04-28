@@ -5,7 +5,7 @@ const UserModel = require('../models/user.model');
 const { createError } = require('../middleware/error.middleware');
 
 const BCRYPT_ROUNDS        = 12;
-const ACCESS_TOKEN_EXPIRY  = '30d';
+const ACCESS_TOKEN_EXPIRY  = '15m';
 const REFRESH_TOKEN_EXPIRY = '30d';
 
 function generateTokens(user) {
