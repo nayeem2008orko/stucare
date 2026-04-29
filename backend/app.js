@@ -1,6 +1,4 @@
 // app.js
-// Express application setup — middleware, routes, error handler
-
 require('dotenv').config();
 const express  = require('express');
 const cors     = require('cors');
@@ -10,26 +8,31 @@ const { generalLimiter }    = require('./src/middleware/rateLimit.middleware');
 const { errorMiddleware }   = require('./src/middleware/error.middleware');
 const logger                = require('./src/utils/logger');
 
-// Validate env vars before anything else
 validateEnv();
 
 const app = express();
 
 // ── Security middleware ───────────────────────────────────────────────────────
-app.use(helmet());   // sets secure HTTP headers
+app.use(helmet());
 app.use(cors({
-  origin:      process.env.FRONTEND_URL,
+  origin: [
+    process.env.FRONTEND_URL  // production URL from env
+  ].filter(Boolean),
   credentials: true
 }));
 
 // ── Body parsing ──────────────────────────────────────────────────────────────
-app.use(express.json({ limit: '10kb' }));  // reject oversized payloads
+app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: false }));
 
 // ── Rate limiting ─────────────────────────────────────────────────────────────
 app.use('/api', generalLimiter);
 
-
+// ── Request logging ───────────────────────────────────────────────────────────
+app.use((req, res, next) => {
+  logger.debug(`${req.method} ${req.path}`);
+  next();
+});
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 app.use('/api/auth',      require('./src/routes/auth.routes'));

@@ -156,30 +156,6 @@ npm run dev
 ```
 
 ---
-
-## Environment Variables
-
-### `backend/.env`
-
-```
-PORT=5000
-NODE_ENV=development
-DATABASE_URL=postgresql://user:password@localhost:5432/stucare
-JWT_SECRET=your_jwt_secret_here
-JWT_REFRESH_SECRET=your_refresh_secret_here
-OPENROUTER_API_KEY=your_openrouter_key_here
-OPENROUTER_API_URL=https://openrouter.ai/api/v1/chat/completions
-OPENROUTER_MODEL=your_model_identifier_here
-ALGORITHM_SERVICE_URL=http://localhost:8000
-FRONTEND_URL=http://localhost:5173
-```
-
-### `algorithm/.env`
-
-```
-PORT=8000
-```
-
 > **Never commit `.env` files.** Use `.env.example` as a template.
 
 ---

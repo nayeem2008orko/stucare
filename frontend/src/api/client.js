@@ -14,11 +14,23 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const isLoginRequest = error.config?.url?.includes('/auth/login');
-    if (error.response?.status === 401 && !isLoginRequest) {
+    const url          = error.config?.url || '';
+    const isAuthRoute  = url.includes('/auth/login') || url.includes('/auth/verify-otp') || url.includes('/auth/resend-otp');
+
+    // 401 — token invalid/expired, send to login
+    if (error.response?.status === 401 && !isAuthRoute) {
       localStorage.clear();
       window.location.href = '/login';
     }
+
+    // 403 — email not verified, even if they somehow got a token
+    // Clear storage and send to verify page — they cannot proceed
+    if (error.response?.status === 403) {
+      const userId = JSON.parse(localStorage.getItem('stucare_user') || '{}')?.id;
+      localStorage.clear();
+      window.location.href = userId ? `/verify-email?userId=${userId}` : '/register';
+    }
+
     return Promise.reject(error);
   }
 );

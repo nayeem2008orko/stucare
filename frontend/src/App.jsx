@@ -7,6 +7,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Planner from "./pages/planner/Planner";
 import Chatbot from "./pages/chatbot/Chatbot";
 import Analytics from "./pages/analytics/Analytics";
+import VerifyEmail from "./pages/auth/Verifyemail";
 
 function RequireAuth({ children }) {
   const token = localStorage.getItem("stucare_access_token");
@@ -38,7 +39,14 @@ export default function App() {
             </RequireGuest>
           }
         />
-
+        <Route
+          path="verify"
+          element={
+            <RequireGuest>
+              <VerifyEmail />
+            </RequireGuest>
+          }
+        />
         <Route
           path="/onboarding"
           element={
