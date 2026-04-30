@@ -208,7 +208,7 @@ npm run dev
 ## Security
 
 - Passwords hashed with **bcrypt** (cost factor 12)
-- **JWT** authentication with short-lived access tokens (15min) and refresh tokens (7 days)
+- **JWT** authentication with short-lived access tokens (15min) and refresh tokens (30 days)
 - **Helmet.js** for secure HTTP headers
 - **CORS** restricted to frontend origin
 - **Rate limiting** on all API and chatbot endpoints
