@@ -93,7 +93,12 @@ async function login({ username, password }) {
   const passwordMatch = await bcrypt.compare(password, user.password);
   if (!passwordMatch) throw createError('Invalid username or password', 401);
 
-  if (!user.is_verified) throw createError('Please verify your email before logging in', 403);
+  if (!user.is_verified) {
+    const err = createError('Please verify your email before logging in', 403);
+    err.userId = user.id;
+    err.email  = user.email;
+    throw err;
+  }
 
   const tokens = generateTokens(user);
   return {

@@ -20,7 +20,23 @@ export default function Login() {
       localStorage.setItem('stucare_user',          JSON.stringify(res.data.data.user));
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed. Please try again.');
+      const status = err.response?.status;
+      const data   = err.response?.data;
+
+      // 403 means account exists but email not verified
+      // Resend OTP and redirect to verify page
+      if (status === 403 && data?.userId) {
+        try {
+          await authApi.resendOTP(data.userId);
+        } catch (_) {}
+        navigate('/verify-email', {
+          replace: true,
+          state: { userId: data.userId, email: data.email || '' }
+        });
+        return;
+      }
+
+      setError(data?.error || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }

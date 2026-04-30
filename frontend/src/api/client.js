@@ -14,8 +14,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const url          = error.config?.url || '';
-    const isAuthRoute  = url.includes('/auth/login') || url.includes('/auth/verify-otp') || url.includes('/auth/resend-otp');
+    const url         = error.config?.url || '';
+    const isAuthRoute = url.includes('/auth/login')
+                     || url.includes('/auth/register')
+                     || url.includes('/auth/verify-otp')
+                     || url.includes('/auth/resend-otp');
 
     // 401 — token invalid/expired, send to login
     if (error.response?.status === 401 && !isAuthRoute) {
@@ -23,9 +26,9 @@ api.interceptors.response.use(
       window.location.href = '/login';
     }
 
-    // 403 — email not verified, even if they somehow got a token
-    // Clear storage and send to verify page — they cannot proceed
-    if (error.response?.status === 403) {
+    // 403 — email not verified on a protected route (bypass attempt)
+    // Let auth routes handle their own 403s (Login.jsx catches it and redirects properly)
+    if (error.response?.status === 403 && !isAuthRoute) {
       const userId = JSON.parse(localStorage.getItem('stucare_user') || '{}')?.id;
       localStorage.clear();
       window.location.href = userId ? `/verify-email?userId=${userId}` : '/register';
